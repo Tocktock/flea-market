@@ -11,6 +11,14 @@ class Product(
     @Id val id: String,
     val price: Int,
     val name: String,
+    val buyer: UserInfo?,
+    val seller: UserInfo,
+)
+
+data class UserInfo(
+    val id: String,
+    val name: String,
+    val phoneNumber: String,
 )
 
 @Repository
