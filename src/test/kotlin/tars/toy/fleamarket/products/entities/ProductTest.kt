@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 internal class ProductTest {
 
     @Autowired
-    lateinit var productRepository: ProductRepository
+    lateinit var productRepository: ProductJpaRepository
 
     @Test
     fun contextLoads() {

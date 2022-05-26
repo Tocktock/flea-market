@@ -2,13 +2,13 @@ package tars.toy.fleamarket.products.application
 
 import org.springframework.stereotype.Service
 import tars.toy.fleamarket.products.entities.Product
-import tars.toy.fleamarket.products.entities.ProductRepository
+import tars.toy.fleamarket.products.entities.ProductJpaRepository
 import tars.toy.fleamarket.products.entities.UserInfo
 import java.util.*
 
 @Service
 class SaveProductService(
-    private val productRepository: ProductRepository
+    private val productRepository: ProductJpaRepository
 ) {
     fun save(dto: SaveProductServiceDTO): Product {
         return productRepository.save(
