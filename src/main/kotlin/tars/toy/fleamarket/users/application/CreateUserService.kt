@@ -1,7 +1,8 @@
 package tars.toy.fleamarket.users.application
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import tars.toy.fleamarket.users.entities.*
@@ -9,33 +10,30 @@ import tars.toy.fleamarket.users.entities.*
 @Service
 class CreateUserService(
     private val userJpaRepository: UserJpaRepository,
-    private val tokenJpaRepository: TokenJpaRepository
+    private val tokenJpaRepository: TokenJpaRepository,
+    private val passwordEncoder: PasswordEncoder
 ) {
     @Transactional
     suspend fun createUser(dto: CreateUserDTO): CreateUserResultDTO {
         val (name, phoneNumber, email, password) = dto
-        return withContext(Dispatchers.IO) {
-            val newUser = userJpaRepository.save(
-                User.create(name, phoneNumber, password, email)
-            ).block()
-            val token = tokenJpaRepository.save(Token(userId = newUser!!.id)).block()
-            CreateUserResultDTO(
-                token = token!!.id,
-                userId = newUser.id
-            )
-        }
+        val newUser = userJpaRepository.save(
+            User.create(name, phoneNumber, passwordEncoder.encode(password), email)
+        ).awaitSingle()
+        val token = tokenJpaRepository.save(Token(userId = newUser!!.id)).awaitSingle()
+        return CreateUserResultDTO(
+            token = token.id,
+            userId = newUser.id
+        )
     }
 
     @Transactional
     suspend fun confirm(token: String) {
-        withContext(Dispatchers.IO) {
-            val confirmResult =
-                tokenJpaRepository.findById(token).block() ?: throw IllegalStateException("토큰 정보가 정확하지 않습니다.")
-            val newUser = userJpaRepository.findById(confirmResult.userId).block()
-            newUser!!.authInfo.state = State.ACTIVATED
-            userJpaRepository.save(newUser).block()
-            tokenJpaRepository.delete(confirmResult)
-        }
+        val confirmResult =
+            tokenJpaRepository.findById(token).awaitSingleOrNull() ?: throw IllegalStateException("토큰 정보가 정확하지 않습니다.")
+        val newUser = userJpaRepository.findById(confirmResult.userId).awaitSingle()
+        newUser!!.authInfo.state = State.ACTIVATED
+        userJpaRepository.save(newUser).awaitSingle()
+        tokenJpaRepository.delete(confirmResult).awaitSingle()
     }
 }
 
