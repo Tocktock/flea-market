@@ -15,9 +15,19 @@ class AuthUserController(
         authUserService.signIn(body.id, body.password)
         return ResponseDTO(ok = true, data = null)
     }
+
+    @PostMapping("/jwt/verify")
+    suspend fun verify(@RequestBody body: VerifyTokenReqDTO): ResponseDTO {
+        val result = authUserService.verify(body.jwt)
+        return ResponseDTO(ok = true, data = result)
+    }
 }
 
 data class SignInReqDTO(
     val id: String,
     val password: String,
+)
+
+data class VerifyTokenReqDTO(
+    val jwt: String,
 )

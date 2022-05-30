@@ -20,6 +20,7 @@ class CreateUserController(
     suspend fun createUser(
         @RequestBody @Valid body: CreateUserReqDTO
     ): ResponseDTO {
+        // validation neede
         val result = createUserService.createUser(
             CreateUserDTO(body.name, body.phoneNumber, body.email, body.password)
         )
@@ -30,7 +31,7 @@ class CreateUserController(
     suspend fun confirmUser(
         @RequestBody @Valid body: ConfirmUserReqDTO
     ): ResponseDTO {
-        createUserService.confirm(body.token)
+        createUserService.confirm(body.jwt)
         return ResponseDTO(ok = true, data = null)
     }
 }
@@ -44,5 +45,5 @@ data class CreateUserReqDTO(
 )
 
 data class ConfirmUserReqDTO(
-    @field:NotBlank val token: String,
+    @field:NotBlank val jwt: String,
 )

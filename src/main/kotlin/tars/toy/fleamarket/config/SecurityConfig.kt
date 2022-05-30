@@ -12,7 +12,7 @@ class SecurityConfig {
     @Bean
     fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         http.authorizeExchange {
-            it.pathMatchers("/*").permitAll()
+            it.pathMatchers("/**").permitAll()
         }
         http.csrf().disable()
         http.formLogin().disable()
