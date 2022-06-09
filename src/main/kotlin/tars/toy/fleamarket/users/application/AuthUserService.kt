@@ -2,7 +2,7 @@ package tars.toy.fleamarket.users.application
 
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.stereotype.Service
-import tars.toy.fleamarket.common.JwtFactory
+import tars.toy.fleamarket.config.security.JwtFactory
 import tars.toy.fleamarket.users.entities.UserJpaRepository
 
 @Service
@@ -20,5 +20,9 @@ class AuthUserService(
 
     suspend fun verify(jwt: String) =
         jwtFactory.verify(jwt)
+
+    suspend fun generateJwt(): String {
+        return jwtFactory.generate(mapOf("name" to "hehe"))
+    }
 
 }

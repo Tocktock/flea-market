@@ -17,6 +17,7 @@ class User(
     val address: String?,
     val addressDetail: String?,
     val authInfo: AuthInfo,
+    val roles: List<Role>,
     @CreatedDate val createAt: LocalDateTime = LocalDateTime.now()
 ) {
     companion object {
@@ -30,6 +31,7 @@ class User(
             ),
             address = null,
             addressDetail = null,
+            roles = listOf(Role.ROLE_USER)
         )
     }
 }
@@ -46,6 +48,9 @@ enum class State {
     DROPOUT
 }
 
+enum class Role {
+    ROLE_USER, ROLE_ADMIN
+}
 
 @Repository
 interface UserJpaRepository : ReactiveMongoRepository<User, String> {

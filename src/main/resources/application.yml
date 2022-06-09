@@ -7,3 +7,12 @@ spring:
       database: fleaMarket
       username: mongoadmin
       password: mypassw0rd
+
+keys:
+  jwt:
+    secret: "thisismypasswordthisismypasswordthisismypasswordthisismypasswordthisismypassword"
+    expiration-time: 86400
+  password:
+    secret: "mypassword"
+    iteration: 32
+    key-length: 256

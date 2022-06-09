@@ -5,7 +5,7 @@ import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import tars.toy.fleamarket.common.JwtFactory
+import tars.toy.fleamarket.config.security.JwtFactory
 import tars.toy.fleamarket.users.entities.*
 
 
