@@ -3,6 +3,7 @@ package tars.toy.fleamarket.config.security
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
@@ -43,6 +44,7 @@ class JwtFactory {
     }
 
     fun getJwtKey(): SecretKey? {
+//        Keys.secretKeyFor(SignatureAlgorithm.HS512)
         return this.key ?: Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret!!)).also { this.key = it }
     }
 

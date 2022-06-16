@@ -1,5 +1,6 @@
 package tars.toy.fleamarket.users.controller
 
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import tars.toy.fleamarket.common.ResponseDTO
 import tars.toy.fleamarket.users.application.AuthUserService
@@ -8,10 +9,15 @@ import tars.toy.fleamarket.users.application.AuthUserService
 class AuthUserController(
     private val authUserService: AuthUserService
 ) {
+    private val logger = LoggerFactory.getLogger(this::class.java)
     @PostMapping("/users/sign-in")
     suspend fun signIn(@RequestBody body: SignInReqDTO): ResponseDTO {
-        authUserService.signIn(body.id, body.password)
-        return ResponseDTO(ok = true, data = null)
+       return try {
+            ResponseDTO(ok = true, data = authUserService.signIn(body.id, body.password))
+        }catch (e : RuntimeException){
+           logger.error(e.message, e)
+            ResponseDTO(ok = false, data = null)
+        }
     }
 
     @GetMapping("/jwt/generate")

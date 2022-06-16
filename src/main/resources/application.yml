@@ -7,7 +7,6 @@ spring:
       database: fleaMarket
       username: mongoadmin
       password: mypassw0rd
-
 keys:
   jwt:
     secret: "thisismypasswordthisismypasswordthisismypasswordthisismypasswordthisismypassword"
@@ -16,3 +15,6 @@ keys:
     secret: "mypassword"
     iteration: 32
     key-length: 256
+logging:
+  level:
+    root: info
