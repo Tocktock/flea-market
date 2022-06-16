@@ -1,6 +1,9 @@
 package tars.toy.fleamarket.products.application
 
+import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Mono
 import tars.toy.fleamarket.products.entities.Product
 import tars.toy.fleamarket.products.entities.ProductJpaRepository
 import tars.toy.fleamarket.products.entities.UserInfo
@@ -10,7 +13,8 @@ import java.util.*
 class SaveProductService(
     private val productRepository: ProductJpaRepository
 ) {
-    fun save(dto: SaveProductServiceDTO): Product {
+    @Transactional
+    suspend fun save(dto: SaveProductServiceDTO): Product {
         return productRepository.save(
             Product(
                 id = UUID.randomUUID().toString(),
@@ -23,7 +27,7 @@ class SaveProductService(
                     phoneNumber = dto.seller.phoneNumber,
                 )
             )
-        ).block()!!
+        ).awaitSingle()
     }
 }
 
