@@ -8,7 +8,7 @@ import tars.toy.fleamarket.products.application.GetProductService
 
 @RestController
 class GetProductController(
-    private val getProductService: GetProductService
+    private val getProductService: GetProductService,
 ) {
     @GetMapping("/products/{id}")
     fun getProduct(
