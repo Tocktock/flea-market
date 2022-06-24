@@ -33,7 +33,7 @@ class CreateUserService(
 
     @Transactional
     suspend fun confirm(jwt: String) {
-        val userId = checkNotNull(jwtFactory.verify(jwt)["id"]) { "값없" }.toString()
+        val userId = checkNotNull(jwtFactory.verifyBearerToken(jwt)["id"]) { "값없" }.toString()
         println(userId)
         val confirmResult =
             tokenJpaRepository.findByUserId(userId).awaitSingleOrNull()

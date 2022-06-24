@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
+import tars.toy.fleamarket.common.FleaMarketException
 import tars.toy.fleamarket.common.ResponseDTO
 import tars.toy.fleamarket.config.security.JwtFactory
 import tars.toy.fleamarket.products.application.SaveProductService
@@ -23,8 +24,8 @@ class SaveProductController(
         @RequestBody body: SaveProductReqDTO,
         @RequestHeader(name = "Authorization") authHeader: String,
     ): ResponseDTO {
-        val name = jwtFactory.verify(authHeader.split(" ")[1])["name"]
-        if (name != body.name) throw RuntimeException("넌 못지나간다")
+        val name = jwtFactory.verifyBearerToken(authHeader)["name"]
+        if (name != body.name) throw FleaMarketException("넌 못지나간다")
         val result = saveProductService.save(
             SaveProductServiceDTO(
                 name = body.name,

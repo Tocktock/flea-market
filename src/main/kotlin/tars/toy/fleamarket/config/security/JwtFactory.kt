@@ -3,11 +3,11 @@ package tars.toy.fleamarket.config.security
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import tars.toy.fleamarket.common.FleaMarketException
 import java.util.*
 import javax.crypto.SecretKey
 
@@ -35,11 +35,14 @@ class JwtFactory {
             .compact()
     }
 
-    fun verify(jwt: String): Map<String, Any> {
-        val result = Jwts.parserBuilder().setSigningKey(getJwtKey()).build().parseClaimsJws(jwt)
-        result.body.forEach {
-            println(it.value)
-        }
+    fun verifyBearerToken(fullToken: String): Map<String, Any> {
+        if (!fullToken.startsWith("Bearer "))
+            throw FleaMarketException("Bearer 헤더가 없습니다.")
+        val token = fullToken.split(" ")[1]
+        val result = Jwts.parserBuilder().setSigningKey(getJwtKey()).build().parseClaimsJws(token)
+//        result.body.forEach {
+//            println(it.value)
+//        }
         return result.body.toMap()
     }
 

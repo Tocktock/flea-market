@@ -10,7 +10,7 @@ spring:
 keys:
   jwt:
     secret: "thisismypasswordthisismypasswordthisismypasswordthisismypasswordthisismypassword"
-    expiration-time: 86400
+    expiration-time: 864000
   password:
     secret: "mypassword"
     iteration: 32

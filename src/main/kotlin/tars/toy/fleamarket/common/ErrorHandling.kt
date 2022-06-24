@@ -3,6 +3,7 @@ package tars.toy.fleamarket.common
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -63,9 +64,10 @@ data class SomeBody(
 @ControllerAdvice
 class ErrorHandling {
 
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     @ExceptionHandler(value = [WebExchangeBindException::class])
     suspend fun webExchangeBindExceptionHandler(e: WebExchangeBindException): ResponseEntity<Any> {
-
         val errors = ErrorFrame(
             errors = e.fieldErrors.map {
                 ErrorContent(
@@ -75,9 +77,44 @@ class ErrorHandling {
                     rejectedValue = it.rejectedValue.toString()
                 )
             })
+        logger.error(e.message, e)
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
     }
+
+    @ExceptionHandler(value = [FleaMarketException::class])
+    suspend fun fleaMarketExceptionHandler(e: FleaMarketException): ResponseEntity<Any> {
+        val error = ErrorFrame(
+            errors = listOf(
+                ErrorContent(
+                    type = "FLEA_MARKET_EXCEPTION",
+                    message = e.message ?: e.localizedMessage,
+                    fieldName = null,
+                    rejectedValue = null
+                )
+            )
+        )
+        logger.error(e.message, e)
+        return ResponseEntity(error, HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler(value = [Exception::class])
+    suspend fun notCatchedException(e: Exception): ResponseEntity<Any> {
+        val error = ErrorFrame(
+            errors = listOf(
+                ErrorContent(
+                    type = "UNKNOWN_EXCEPTION",
+                    message = e.message ?: e.localizedMessage,
+                    fieldName = null,
+                    rejectedValue = null
+                )
+            )
+        )
+        logger.error(e.message, e)
+        return ResponseEntity(error, HttpStatus.FORBIDDEN)
+    }
 }
+
+class FleaMarketException(message: String) : RuntimeException(message)
 
 data class ErrorFrame(
     val errors: List<ErrorContent>

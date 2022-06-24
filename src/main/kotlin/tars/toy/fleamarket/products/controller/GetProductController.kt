@@ -11,7 +11,7 @@ class GetProductController(
     private val getProductService: GetProductService,
 ) {
     @GetMapping("/products/{id}")
-    fun getProduct(
+    suspend fun getProduct(
         @PathVariable id: String
     ): ResponseDTO {
         return ResponseDTO(ok = true, data = getProductService.getById(id))

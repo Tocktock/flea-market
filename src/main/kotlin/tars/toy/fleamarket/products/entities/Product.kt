@@ -13,10 +13,17 @@ class Product(
     @Id val id: String,
     val price: Int,
     val name: String,
-    val buyer: UserInfo?,
-    val seller: UserInfo,
+    buyer: UserInfo?,
+    var seller: UserInfo,
     @CreatedDate val createAt: LocalDateTime = LocalDateTime.now(),
-)
+) {
+    var buyer = buyer
+        private set
+
+    fun setBuyer(userInfo: UserInfo) {
+        buyer = userInfo
+    }
+}
 
 data class UserInfo(
     val id: String,

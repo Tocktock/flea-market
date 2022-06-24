@@ -22,7 +22,7 @@ class AuthUserService(
     }
 
     suspend fun verify(jwt: String) =
-        jwtFactory.verify(jwt)
+        jwtFactory.verifyBearerToken(jwt)
 
     suspend fun generateJwt(): String {
         return jwtFactory.generate(mapOf("name" to "hehe"))

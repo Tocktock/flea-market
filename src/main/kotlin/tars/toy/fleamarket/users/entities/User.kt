@@ -54,5 +54,5 @@ enum class Role {
 
 @Repository
 interface UserJpaRepository : ReactiveMongoRepository<User, String> {
-    fun findByAuthInfoEmail(email: String): Mono<User>
+    fun findByAuthInfoEmail(email: String): Mono<User?>
 }
